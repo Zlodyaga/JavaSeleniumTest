@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.Objects;
+
 public class Book {
     private String title;
     private String author;
@@ -14,6 +16,25 @@ public class Book {
         this.priceWhole = priceWhole;
         this.priceFraction = priceFraction;
         this.isBestSeller = isBestSeller;
+    }
+
+    // Перегрузка equals()
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return isBestSeller == book.isBestSeller &&
+                Objects.equals(title, book.title) &&
+                Objects.equals(author, book.author) &&
+                Objects.equals(priceWhole, book.priceWhole) &&
+                Objects.equals(priceFraction, book.priceFraction);
+    }
+
+    // Перегрузка hashCode()
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, author, priceWhole, priceFraction, isBestSeller);
     }
 
     // Геттер для назви книги
