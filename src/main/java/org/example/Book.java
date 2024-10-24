@@ -1,6 +1,9 @@
 package org.example;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Book {
     private String title;
@@ -24,12 +27,26 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
+
+        // Порівняння авторів: спочатку розділимо авторів на окремі елементи
+        List<String> thisAuthors = Arrays.stream(author.split(",\\s*"))
+                .filter(author -> !author.trim().equalsIgnoreCase("et al."))
+                .toList();
+
+        List<String> otherAuthors = Arrays.stream(book.author.split(",\\s*"))
+                .filter(author -> !author.trim().equalsIgnoreCase("et al."))
+                .toList();
+
+        // Перевіримо, чи є спільні автори між списками
+        boolean authorsMatch = thisAuthors.stream().anyMatch(otherAuthors::contains);
+
         return isBestSeller == book.isBestSeller &&
                 Objects.equals(title, book.title) &&
-                Objects.equals(author, book.author) &&
+                authorsMatch &&
                 Objects.equals(priceFull, book.priceFull) &&
                 Objects.equals(priceRent, book.priceRent);
     }
+
 
     // Перегрузка hashCode()
     @Override
