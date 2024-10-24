@@ -5,6 +5,7 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
+import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class ProductSearchedPage {
@@ -13,7 +14,7 @@ public class ProductSearchedPage {
     }
 
     public ElementsCollection getProducts() {
-        return $$(By.cssSelector("[data-component-type='s-search-result']"))
+        return $$(By.xpath(".//div[@data-component-type='s-search-result']"))
                 .shouldHave(CollectionCondition.sizeGreaterThan(15));
     }
 
@@ -21,12 +22,10 @@ public class ProductSearchedPage {
         return product.$(By.cssSelector(".a-size-medium.a-color-base.a-text-normal")).getText();
     }
 
-    public String getpriceWhole(SelenideElement product) {
-        return product.$(By.cssSelector(".a-price-whole")).getText();
-    }
-
-    public String getpriceFraction(SelenideElement product) {
-        return product.$(By.cssSelector(".a-price-fraction")).getText();
+    public ElementsCollection getPricesKindle(SelenideElement product) { //На жаль, не витягує ціну.
+        return product.$$(By.xpath(".//div[@class='a-row a-spacing-mini']//div[@class='a-row']" +
+                "//a[@class='a-link-normal s-no-hover s-underline-text s-underline-link-text s-link-style a-text-normal']" +
+                "//span[@class='a-price']/span[@class='a-offscreen']"));
     }
 
     public String getAuthorName(SelenideElement product) {

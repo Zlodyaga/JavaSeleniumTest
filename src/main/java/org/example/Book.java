@@ -5,16 +5,16 @@ import java.util.Objects;
 public class Book {
     private String title;
     private String author;
-    private String priceWhole;
-    private String priceFraction;
+    private String priceFull;
+    private String priceRent;
     private boolean isBestSeller;
 
     // Конструктор
-    public Book(String title, String author, String priceWhole, String priceFraction, boolean isBestSeller) {
+    public Book(String title, String author, String priceFull, String priceRent, boolean isBestSeller) {
         this.title = title;
         this.author = formatAuthors(author); // Форматируем автора при создании объекта
-        this.priceWhole = priceWhole;
-        this.priceFraction = priceFraction;
+        this.priceFull = priceFull;
+        this.priceRent = priceRent;
         this.isBestSeller = isBestSeller;
     }
 
@@ -27,14 +27,14 @@ public class Book {
         return isBestSeller == book.isBestSeller &&
                 Objects.equals(title, book.title) &&
                 Objects.equals(author, book.author) &&
-                Objects.equals(priceWhole, book.priceWhole) &&
-                Objects.equals(priceFraction, book.priceFraction);
+                Objects.equals(priceFull, book.priceFull) &&
+                Objects.equals(priceRent, book.priceRent);
     }
 
     // Перегрузка hashCode()
     @Override
     public int hashCode() {
-        return Objects.hash(title, author, priceWhole, priceFraction, isBestSeller);
+        return Objects.hash(title, author, priceFull, priceRent, isBestSeller);
     }
 
     // Геттер для назви книги
@@ -58,23 +58,23 @@ public class Book {
     }
 
     // Геттер для цілої частини ціни
-    public String getPriceWhole() {
-        return priceWhole;
+    public String getPriceFull() {
+        return priceFull;
     }
 
     // Сеттер для цілої частини ціни
-    public void setPriceWhole(String priceWhole) {
-        this.priceWhole = priceWhole;
+    public void setPriceFull(String priceFull) {
+        this.priceFull = priceFull;
     }
 
     // Геттер для дробової частини ціни
-    public String getPriceFraction() {
-        return priceFraction;
+    public String getPriceRent() {
+        return priceRent;
     }
 
     // Сеттер для дробової частини ціни
-    public void setPriceFraction(String priceFraction) {
-        this.priceFraction = priceFraction;
+    public void setPriceRent(String priceRent) {
+        this.priceRent = priceRent;
     }
 
     // Геттер для статусу бестселера
@@ -89,7 +89,8 @@ public class Book {
 
     // Метод для отримання повної ціни
     public String getFullPrice() {
-        return priceWhole + "." + priceFraction;
+        if(priceRent == null || priceRent.isEmpty()) return priceFull;
+        else return priceFull + " For rent:" + priceRent;
     }
 
     // Метод для форматування авторов
@@ -99,7 +100,7 @@ public class Book {
         }
 
         // Добавляем пробел после "by", если он отсутствует
-        String formatted = input.replaceAll("by(\\S)", "by $1");
+        String formatted = input.replaceAll("by(\\S)", "$1");
 
         // Добавляем пробел после запятых, если его нет
         formatted = formatted.replaceAll(",(\\S)", ", $1");
