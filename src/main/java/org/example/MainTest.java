@@ -4,6 +4,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.Step;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.example.pages.HomePage;
 import org.example.pages.ProductSearchedPage;
@@ -38,18 +39,8 @@ public class MainTest {
         assertTrue(true);
     }
 
-    @Test
-    public void testSearchForJavaBooksAndCheckHeadFirstJava() {
-        // Шаг 1: Перейти на Amazon
-        homePage.open();
-
-        // Шаг 2: Установить фильтр "Books"
-        homePage.selectDropDown("Books");
-
-        // Шаг 3: Ввести поисковое слово "Java"
-        homePage.enterSearch("Java");
-
-        // Шаг 4: Получить информацию с первой страницы
+    @Step("Зберегти інформацію з першої сторінки: Назва книги, автор, ціна чи є бестселлером в ліст")
+    private List<Book> saveBooks() {
         ElementsCollection books = productSearchedPage.getProducts();
         List<Book> bookDetails = new ArrayList<>();
 
@@ -74,19 +65,31 @@ public class MainTest {
             Book newBook = new Book(title, author, priceFull, priceRent, isBestSeller);
             bookDetails.add(newBook);
         }
-
+        return bookDetails;
+    }
+    @Step("Переконатись, що в лісті є книга")
+    private boolean findBookInList(List<Book> books) {
         testBookPage.open();
 
-        //Book bookToFind = new Book("Head First Java: A Brain-Friendly Guide", "by Kathy Sierra, Bert Bates, et al.", "16", "97", true);
         Book bookToFind = testBookPage.getBook();
 
-        // Шаг 5: Проверить наличие книги 'Head First Java'
-        boolean found = bookDetails.stream()
-                .anyMatch(book -> book.equals(bookToFind));
+        return books.stream().anyMatch(book -> book.equals(bookToFind));
+    }
 
-        // Assertions для проверки теста
+    @Test
+    public void testSearchForJavaBooksAndCheckHeadFirstJava() {
+        homePage.open();
+
+        // Шаг 2: Установить фильтр "Books"
+        homePage.selectDropDown("Books");
+
+        // Шаг 3: Ввести поисковое слово "Java"
+        homePage.enterSearch("Java");
+
+        // Шаг 4: Получить информацию с первой страницы
+        List<Book> bookDetails = saveBooks();
 
         assertFalse(bookDetails.isEmpty(), "Список книг не должен быть пустым.");
-        assertTrue(found, "Книга 'Head First Java: A Brain-Friendly Guide' должна быть найдена.");
+        assertTrue(findBookInList(bookDetails), "Книга 'Head First Java: A Brain-Friendly Guide' должна быть найдена.");
     }
 }

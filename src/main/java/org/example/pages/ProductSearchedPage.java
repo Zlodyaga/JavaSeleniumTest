@@ -3,6 +3,7 @@ package org.example.pages;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -13,11 +14,12 @@ public class ProductSearchedPage {
     public ProductSearchedPage() {
     }
 
+    @Step("Отримано продукти зі сторінки пошуку")
     public ElementsCollection getProducts() {
         return $$(By.xpath(".//div[@data-component-type='s-search-result']"))
                 .shouldHave(CollectionCondition.sizeGreaterThan(15));
     }
-
+    
     public String getTitle(SelenideElement product) {
         return product.$(By.cssSelector(".a-size-medium.a-color-base.a-text-normal")).getText();
     }
@@ -28,6 +30,7 @@ public class ProductSearchedPage {
                 "//span[@class='a-price']/span[@class='a-offscreen']"));
     }
 
+    @Step("")
     public String getAuthorName(SelenideElement product) {
         // Отримати текст з елементів
         StringBuilder authorsText = new StringBuilder();
